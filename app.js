@@ -12,14 +12,21 @@ request({ url, json: true }, (err, res, body) => {
   }
 });
 
-const geoUrl = 'https://api.mapbox.com/geocoding/v5/mapbox.places/Los Angeles.json?access_token=pk.eyJ1IjoiamluaWhlbmRyaXgiLCJhIjoiY2s5dDJlYzFjMDA4MDNucG43c3dxM2ZhcyJ9.5gUfNd3yNgXZWtsu8owG8A';
+const geocode = (address, callback) => {
+  const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${address}.json?access_token=pk.eyJ1IjoiamluaWhlbmRyaXgiLCJhIjoiY2s5dDJlYzFjMDA4MDNucG43c3dxM2ZhcyJ9.5gUfNd3yNgXZWtsu8owG8A`;
 
-request({ url: geoUrl, json: true }, (err, res, body) => {
-  if (err) {
-    console.log('Unable to connect to geo service!')
-  } else if (!body.features.length) {
-    console.log('Location not found!');
-  } else {
-    console.log(...body.features[0].center)
-  }
-});
+  request({ url, json: true }, (err, res, body) => {
+    if (err) {
+      callback('Unable to connect to geo service!')
+    } else if (!body.features.length) {
+      callback('Location not found!');
+    } else {
+      callback(...body.features[0].center)
+    }
+  });
+}
+
+geocode('New York', (error, data) => {
+  console.log('Error: ', error);
+  console.log('Data: ', data);
+})
