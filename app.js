@@ -19,9 +19,18 @@ const geocode = (address, callback) => {
     if (err) {
       callback('Unable to connect to geo service!')
     } else if (!body.features.length) {
-      callback('Location not found!');
+      callback('Location not found! Try another search');
     } else {
-      callback(...body.features[0].center)
+      const {
+        center: [longitude, latitude],
+        place_name: location,
+      } = body.features[0];
+
+      callback(undefined, {
+        latitude,
+        longitude,
+        location
+      });
     }
   });
 }
